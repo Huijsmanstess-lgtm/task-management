@@ -1,70 +1,54 @@
-# Task Management App
+# Task Manager
 
-A modern full-stack task management application built with Next.js 15, TypeScript, Tailwind CSS, Prisma, MongoDB, NextAuth, and shadcn/ui.
+A full-stack task management web application with authentication 
+and personal task tracking.
 
-## Features
+## What it does
 
-- User authentication with NextAuth
-- Task creation and management
-- Modern UI with shadcn/ui components
-- MongoDB database with Prisma ORM
-- Responsive design with Tailwind CSS
+- Create an account and log in securely
+- Create, edit, and delete tasks
+- Update task status: To Do, In Progress, Done
+- Personal dashboard with all your tasks
 
-## Getting Started
+## Tech stack
+
+**Frontend**
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+
+**Backend**
+- Next.js API Routes
+- MongoDB Atlas + Mongoose
+- NextAuth/Auth.js
+- bcryptjs password hashing
+- JWT sessions + protected routes
+
+## Getting started
 
 ### Prerequisites
-
-- Node.js 18+
-- MongoDB database
+- Node.js v18+
+- MongoDB Atlas account
 
 ### Installation
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+git clone https://github.com/Huijsmanstess-lgtm/task-management.git
+cd task-management
+npm install
 
-2. Set up your database:
-   - Install MongoDB if you haven't already
-   - Start MongoDB service
-   - Update the `DATABASE_URL` in `.env` with your MongoDB connection string
+### Environment variables
 
-3. Set up Prisma:
-   ```bash
-   npx prisma db push
-   npx prisma generate
-   ```
+Create a `.env.local` file:
 
-4. Run the development server:
-   ```bash
-   npm run dev
-   ```
+MONGODB_URI=your_mongodb_connection_string
+NEXTAUTH_SECRET=your_secret
+NEXTAUTH_URL=http://localhost:3000
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+### Run locally
 
-## Environment Variables
+npm run dev
 
-Create a `.env` file in the root directory with the following variables:
+## Live demo
 
-```
-DATABASE_URL="mongodb://localhost:27017/your_database_name"
-NEXTAUTH_SECRET="your-secret-key"
-NEXTAUTH_URL="http://localhost:3000"
-```
-
-## Project Structure
-
-- `app/` - Next.js app directory
-- `lib/` - Utility functions and configurations
-- `components/` - Reusable UI components
-- `prisma/` - Database schema and migrations
-
-## Technologies Used
-
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe JavaScript
-- **Tailwind CSS** - Utility-first CSS framework
-- **Prisma** - Database ORM
-- **MongoDB** - NoSQL database
-- **NextAuth** - Authentication library
-- **shadcn/ui** - UI component library
+https://task-management-orcin-gamma.vercel.app
