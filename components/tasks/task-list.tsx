@@ -26,7 +26,13 @@ type TaskListProps = {
 
 export default async function TaskList({ userId }: TaskListProps) {
   await connectDB();
-  const tasks = await Task.find({ userId }).sort({ createdAt: -1 }).lean();
+  const tasks = (await Task.find({ userId }).sort({ createdAt: -1 }).lean()).map((task: any) => ({
+    ...task,
+    _id: task._id.toString(),
+    userId: task.userId.toString(),
+    createdAt: task.createdAt.toISOString(),
+    updatedAt: task.updatedAt.toISOString(),
+  }));
 
   return (
     <section className="rounded-[2rem] border border-slate-800 bg-slate-950/80 p-6 shadow-xl shadow-slate-950/20">

@@ -53,16 +53,15 @@ export default function TaskCard({ task }: TaskCardProps) {
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    setIsRemoved(true);
 
     try {
       await deleteTask(currentTask._id);
       toast.success('Taak verwijderd');
+      setIsRemoved(true);
       router.refresh();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Er is iets misgegaan bij het verwijderen.';
       toast.error(message);
-      setIsRemoved(false);
     } finally {
       setIsDeleting(false);
       setIsDialogOpen(false);

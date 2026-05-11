@@ -2,6 +2,8 @@ import { Suspense } from 'react';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
+import connectDB from '@/lib/mongodb';
+import Task from '@/lib/models/Task';
 import TaskForm from '@/components/tasks/task-form';
 import TaskList, { TaskListSkeleton } from '@/components/tasks/task-list';
 
@@ -11,9 +13,15 @@ async function getSession() {
 
 export default async function DashboardPage() {
   const session = await getSession();
-  if (!session?.user?.email) {
+  if (!session?.user?.id) {
     redirect('/login');
   }
+
+  await connectDB();
+  const [doneCount, openCount] = await Promise.all([
+    Task.countDocuments({ userId: session.user.id, status: 'done' }),
+    Task.countDocuments({ userId: session.user.id, status: { $ne: 'done' } }),
+  ]);
 
   const userName = session.user.name ?? session.user.email;
 
@@ -33,11 +41,11 @@ export default async function DashboardPage() {
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 text-center">
               <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Voltooid</p>
-              <p className="mt-4 text-3xl font-semibold text-slate-100">18</p>
+              <p className="mt-4 text-3xl font-semibold text-slate-100">{doneCount}</p>
             </div>
             <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 text-center">
               <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Open taken</p>
-              <p className="mt-4 text-3xl font-semibold text-slate-100">7</p>
+              <p className="mt-4 text-3xl font-semibold text-slate-100">{openCount}</p>
             </div>
           </div>
         </div>
