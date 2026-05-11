@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 
-let mongoServer: MongoMemoryServer | undefined;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/task_management_db';
+const MONGODB_URI = process.env.MONGODB_URI!;
+
+if (!MONGODB_URI) {
+  throw new Error('MONGODB_URI is not defined');
+}
 
 let cached = global.mongoose;
 
@@ -16,25 +18,10 @@ async function connectDB(): Promise<mongoose.Mongoose> {
   }
 
   if (!cached.promise) {
-    cached.promise = (async () => {
-      try {
-        // Try to connect to MongoDB Atlas first
-        const mongooseInstance = await mongoose.connect(MONGODB_URI);
-        console.log('✅ MongoDB Atlas connected');
-        return mongooseInstance;
-      } catch (error) {
-        console.log('⚠️ MongoDB Atlas connection failed, starting in-memory server...');
-        
-        // Fallback to in-memory MongoDB
-        if (!mongoServer) {
-          mongoServer = await MongoMemoryServer.create();
-        }
-        const mongoUri = mongoServer.getUri();
-        const mongooseInstance = await mongoose.connect(mongoUri);
-        console.log('✅ In-memory MongoDB connected');
-        return mongooseInstance;
-      }
-    })();
+    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
+      console.log('✅ MongoDB Atlas connected');
+      return mongoose;
+    });
   }
 
   cached.conn = await cached.promise;
@@ -49,3 +36,4 @@ declare global {
     promise: Promise<mongoose.Mongoose> | null;
   };
 }
+
